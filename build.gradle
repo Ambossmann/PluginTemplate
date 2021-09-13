@@ -52,6 +52,7 @@ tasks.register('startSpigot', JavaExec) {
 		languageVersion = JavaLanguageVersion.of(jvmversion)
 	}
 	dependsOn tasks.named('movePlugin')
+	dependsOn tasks.named('updateSpigot')
 	classpath files("/server/spigot-" + mcversion + "-R0.1-SNAPSHOT.jar")
 	workingDir = "/server"
 }

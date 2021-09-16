@@ -36,18 +36,21 @@ eclipse {
 }
 
 tasks.register('updateSpigot', Copy) {
+	group 'spigot'
 	from configurations.spigot
 	include "spigot-*.jar"
 	into "$projectDir/server"
 }
 
 tasks.register('movePlugin', Copy) {
+	group 'spigot'
 	dependsOn tasks.named('assemble')
 	from "$projectDir/build/libs/" + project.name + "-" + version + ".jar"
 	into "$projectDir/server/plugins"
 }
 
 tasks.register('startSpigot', JavaExec) {
+	group 'spigot'
 	javaLauncher = javaToolchains.launcherFor {
 		languageVersion = JavaLanguageVersion.of(jvmversion)
 	}
@@ -57,13 +60,10 @@ tasks.register('startSpigot', JavaExec) {
 	workingDir = "/server"
 }
 
-tasks.register('removeClasspath', Delete) {
-	delete "$projectDir/.classpath"
-}
-
 tasks.register('fixEclipseClasspath') {
-	dependsOn tasks.named('removeClasspath')
-	dependsOn tasks.named('eclipse')
+	group 'ide'
+	dependsOn tasks.named('cleanEclipseClasspath')
+	dependsOn tasks.named('eclipseClasspath')
 }
 
-tasks.named('eclipse').get().mustRunAfter('removeClasspath')
+tasks.named('eclipseClasspath').get().mustRunAfter('cleanEclipseClasspath')
